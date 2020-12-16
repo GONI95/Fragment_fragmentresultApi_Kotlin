@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -21,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 // https://developer.android.com/training/basics/fragments/pass-data-between
 class MainFragment : Fragment(R.layout.fragment_main) {
 
-    // 암시적 인텐트 사용법
+    // 암시적 인텐트 사용법(camera)
     // 기존에 사용하던 startActivityForResult가 이제 업데이트를 멈추고 Result Api가 나옴
     val getContent = registerForActivityResult(
         ActivityResultContracts.GetContent()) {
@@ -29,7 +30,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         view?.findViewById<ImageView>(R.id.imageView)?.setImageURI(it)
     }
 
-    // 명시적 인텐트 사용법
+    // 명시적 인텐트 사용법(intent_button)
     val getStartActivityForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()){  ActivityResult ->
 
@@ -46,19 +47,19 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // subFragment
+        // 반환위치 : subFragment / 화면 돌리면 초기화되버림(뷰모델, 세이브인스턴스 사용해야하나)
         view.findViewById<Button>(R.id.button).setOnClickListener {
             setFragmentResult("MainToSub", bundleOf("text" to "나는 서브프래그먼트다"))
             findNavController().navigate(R.id.action_mainFragment_to_subFragment)
         }
 
-        // mainFragment
+        // 반환위치 : mainFragment
         view.findViewById<Button>(R.id.camera).setOnClickListener {
             getContent.launch("image/*")
             // 데이터의 마임 타입을 정의하면 됨
         }
 
-        // subactivity
+        // 반환위치 : subactivity
         view.findViewById<Button>(R.id.intent_button).setOnClickListener {
             Intent(requireContext(), ResultActivity::class.java).apply {
                 getStartActivityForResult.launch(this)
