@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import androidx.core.os.bundleOf
 
@@ -20,6 +21,17 @@ class ResultActivity : AppCompatActivity() {
             intent.putExtra("data3", "나는 서브액티비티다3")
             intent.putExtra("data4", "나는 서브액티비티다4")
             setResult(Activity.RESULT_OK, intent)
+            finish()
         }
+
+
+
+        findViewById<Button>(R.id.camera_button).setOnClickListener {
+        }
+    }
+
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_CANCELED)
+        finish()
     }
 }
